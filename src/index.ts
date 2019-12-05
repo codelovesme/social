@@ -25,21 +25,21 @@ app.use(bodyParser.json())
  * Routes
  */
 app.get(
-    '/api/message',
+    '/api/post',
     handleRequest(async () => {
         return db.read()
     })
 )
 
 app.post(
-    '/api/message',
+    '/api/post',
     handleRequest(async ({ body }) => {
         return db.save(body)
     })
 )
 
 app.put(
-    'api/message/:id',
+    'api/post/:id',
     handleRequest(async ({ body, params }) => {
         const id: string = params['id']
         return db.save({ id }, body)
@@ -47,7 +47,7 @@ app.put(
 )
 
 app.delete(
-    'api/message/:id',
+    'api/post/:id',
     handleRequest(async ({ params }) => {
         return db.remove({ id: params['id'] })
     })
@@ -56,3 +56,5 @@ app.delete(
  * Start Server
  */
 app.listen(port, () => console.log(`listening on port ${port}!`))
+
+export default  app;
