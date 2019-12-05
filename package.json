@@ -1,32 +1,40 @@
 {
-  "name": "social",
-  "version": "0.0.1",
-  "description": "En temel düzeyde çalışan bir sosyal medya REST backend",
-  "main": "dist/index.js",
-  "scripts": {
-    "test": "jest",
-    "compile": "tsc -p ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/codelovesme/social.git"
-  },
-  "keywords": [
-    "social"
-  ],
-  "author": "codelovesme@gmail.com",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/codelovesme/social/issues"
-  },
-  "homepage": "https://github.com/codelovesme/social#readme",
-  "devDependencies": {
-    "@types/express": "^4.17.2",
-    "jest": "^24.9.0",
-    "typescript": "^3.7.3"
-  },
-  "dependencies": {
-    "express": "~4.17.1",
-    "mongodb": "^3.3.5"
-  }
+    "name": "social",
+    "version": "0.0.1",
+    "description": "En temel düzeyde çalışan bir sosyal medya REST backend",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "jest",
+        "format": "prettier --write \"**/*.*\"",
+        "compile": "tsc -p ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/codelovesme/social.git"
+    },
+    "keywords": [
+        "social"
+    ],
+    "author": "codelovesme@gmail.com",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/codelovesme/social/issues"
+    },
+    "homepage": "https://github.com/codelovesme/social#readme",
+    "devDependencies": {
+        "@types/express": "^4.17.2",
+        "jest": "^24.9.0",
+        "prettier": "^1.19.1",
+        "typescript": "^3.7.3"
+    },
+    "dependencies": {
+        "express": "~4.17.1",
+        "mongodb": "^3.3.5"
+    },
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true
+    }
 }
