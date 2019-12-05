@@ -57,4 +57,4 @@ app.delete(
  */
 app.listen(port, () => console.log(`listening on port ${port}!`))
 
-export default  app;
+export default app
