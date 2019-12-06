@@ -1,6 +1,8 @@
 import express, { Express, Response, Request } from 'express'
 import bodyParser from 'body-parser'
 import { createDB } from './db'
+import { isPostData, isPost } from './model'
+import { isUUID } from './tools'
 
 const app: Express = express()
 const port: number = 3000
@@ -34,6 +36,7 @@ app.get(
 app.post(
     '/api/post',
     handleRequest(async ({ body }) => {
+        if (!isPostData(body)) throw 'Invalid post data'
         return db.save(body)
     })
 )
@@ -42,6 +45,8 @@ app.put(
     'api/post/:id',
     handleRequest(async ({ body, params }) => {
         const id: string = params['id']
+        if (!isUUID(id)) throw 'Invalid id'
+        if (!isPost(body)) throw 'Invalid post'
         return db.save({ id }, body)
     })
 )
@@ -49,7 +54,9 @@ app.put(
 app.delete(
     'api/post/:id',
     handleRequest(async ({ params }) => {
-        return db.remove({ id: params['id'] })
+        const id: string = params['id']
+        if (!isUUID(id)) throw 'Invalid id'
+        return db.remove({ id })
     })
 )
 /**

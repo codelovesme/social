@@ -1,8 +1,9 @@
-import { MongoClient, QuerySelector, Collection, FilterQuery } from 'mongodb'
+import { MongoClient, Collection, FilterQuery } from 'mongodb'
+import { v4 as createUUID } from 'uuid'
 
 type Disconnect = Function
 
-const url = 'mongodb://localhost'
+const url = 'mongodb://localhost:27017'
 const databaseName = 'social'
 
 const connect = async (): Promise<[Collection, Disconnect]> => {
@@ -18,15 +19,23 @@ const connect = async (): Promise<[Collection, Disconnect]> => {
 export const createDB = <T extends object>() => ({
     read: async (query?: FilterQuery<T>) => {
         const [collection, getResult] = await connect()
-        return getResult(await collection.find(query).toArray())
+        return getResult(
+            await collection
+                .find(query)
+                .sort({ createdAt: 1 })
+                .toArray()
+        )
     },
-
     remove: async (selector: object) => {
         const [collection, getResult] = await connect()
         return getResult(await collection.remove(selector))
     },
     save: async (doc: T, query?: FilterQuery<any>) => {
         const [collection, getResult] = await connect()
-        return getResult(query ? await collection.updateOne(query, doc, { upsert: true }) : await collection.save(doc))
+        return getResult(
+            query
+                ? await collection.updateOne(query, doc, { upsert: true })
+                : await collection.save({ ...doc, id: createUUID(), createdAt: new Date().getTime() })
+        )
     },
 })
