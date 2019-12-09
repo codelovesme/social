@@ -1,9 +1,8 @@
 import request from 'supertest'
-import app from '../src/index'
-import { Post } from '../src/model'
+import app from '../src/app'
 
 describe('Test api', () => {
-    it('should insert a post into db', done => {
+    it('should insert a post into db', async done => {
         request(app)
             .post('/api/post')
             .send({
@@ -18,7 +17,7 @@ describe('Test api', () => {
             })
             .end(done)
     })
-    it('should get all posts', done => {
+    it('should get all posts', async done => {
         request(app)
             .get('/api/post')
             .set('Accept', 'application/json')
@@ -30,65 +29,70 @@ describe('Test api', () => {
             })
             .end(done)
     })
-    it('should update the post', done => {
+    it('should update the post', async done => {
         /**
-         * fetch all posts
+         * insert a post
          */
         request(app)
-            .get('/api/post')
+            .post('/api/post')
+            .send({
+                text: 'Hello',
+                userId: 'ad162764-5f6b-45e3-ab2a-397887c78d1e',
+            })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
-            .expect(res => {
-                const posts: Post[] = res.body.data
-                const postToBeModified = posts[0]
-                const modifiedPost = {
-                    ...postToBeModified,
-                    text: 'Hello World',
-                }
+            .end((err, res) => {
+                expect(res.body.status).toBe('Success')
+                const postToBeModified = res.body.data.ops[0].id
                 /**
-                 * Request to update a post
+                 * Request to update the post
                  */
                 request(app)
-                    .put(`/api/post/${postToBeModified.id}`)
-                    .send(modifiedPost)
+                    .put(`/api/post/${postToBeModified}`)
+                    .send({
+                        id: postToBeModified,
+                        text: "What's up?",
+                        userId: 'ad162764-5f6b-45e3-ab2a-397887c78d1e',
+                        createdAt: 1575873579680,
+                    })
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
                     .expect(200)
                     .expect(res => {
                         expect(res.body.status).toBe('Success')
-                        expect(res.body.data instanceof Array).toBeTruthy()
                     })
                     .end(done)
             })
-            .end()
     })
-    it('should delete given post', done => {
+    it('should delete given post', async done => {
         /**
-         * fetch all posts
+         * insert a post
          */
         request(app)
-            .get('/api/post')
+            .post('/api/post')
+            .send({
+                text: 'Hello',
+                userId: 'ad162764-5f6b-45e3-ab2a-397887c78d1e',
+            })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
-            .expect(res => {
-                const posts: Post[] = res.body.data
-                const postToBeRemoved = posts[0]
+            .end((err, res) => {
+                expect(res.body.status).toBe('Success')
+                const postToBeModified = res.body.data.ops[0].id
                 /**
-                 * Request to update a post
+                 * Request to delete the post
                  */
                 request(app)
-                    .delete(`/api/post/${postToBeRemoved.id}`)
+                    .delete(`/api/post/${postToBeModified}`)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
                     .expect(200)
                     .expect(res => {
                         expect(res.body.status).toBe('Success')
-                        expect(res.body.data instanceof Array).toBeTruthy()
                     })
                     .end(done)
             })
-            .end()
     })
 })

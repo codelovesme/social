@@ -7,7 +7,7 @@ const url = 'mongodb://localhost:27017'
 const databaseName = 'social'
 
 const connect = async (): Promise<[Collection, Disconnect]> => {
-    const client = await MongoClient.connect(url)
+    const client = await MongoClient.connect(url, { useUnifiedTopology: true })
     const collection = client.db(databaseName).collection('posts')
     const getResult = (result: any) => {
         client.close()
@@ -28,14 +28,14 @@ export const createDB = <T extends object>() => ({
     },
     remove: async (selector: object) => {
         const [collection, getResult] = await connect()
-        return getResult(await collection.remove(selector))
+        return getResult(await collection.deleteOne(selector))
     },
     save: async (doc: T, query?: FilterQuery<any>) => {
         const [collection, getResult] = await connect()
         return getResult(
             query
-                ? await collection.updateOne(query, doc, { upsert: true })
-                : await collection.save({ ...doc, id: createUUID(), createdAt: new Date().getTime() })
+                ? await collection.updateOne(query, { $set: doc }, { upsert: true })
+                : await collection.insertOne({ ...doc, id: createUUID(), createdAt: new Date().getTime() })
         )
     },
 })

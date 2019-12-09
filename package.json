@@ -2,11 +2,12 @@
     "name": "social",
     "version": "0.0.1",
     "description": "En temel düzeyde çalışan bir sosyal medya REST backend",
-    "main": "dist/index.js",
+    "main": "dist/src/index.js",
     "scripts": {
         "test": "jest dist/test/social.spec.js",
         "format": "prettier --write '**/*.*'",
-        "compile": "tsc -p ."
+        "compile": "tsc -p .",
+        "start": "node ."
     },
     "repository": {
         "type": "git",
